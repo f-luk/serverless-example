@@ -1,8 +1,8 @@
 import { v1 as uuidv1 } from 'uuid';
-import * as dynamoDBClient from './libs/dynamodb-lib';
-import { success, failure } from './libs/reponse-lib';
+import handler from './libs/handler';
+import dynamoDB from './libs/dynamoDB';
 
-export async function main(event, context) {
+export const main = handler(async (event, context) => {
     const data = JSON.parse(event.body);
 
     const params = {
@@ -26,10 +26,6 @@ export async function main(event, context) {
         }
     };
 
-    try {
-        await dynamoDBClient.call("put", params);
-        return success(params.Item);
-    } catch (e) {
-        return failure({ status: false });
-    }
-}
+    await dynamoDB.put(params);
+
+});
