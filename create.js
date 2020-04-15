@@ -18,8 +18,8 @@ export async function main(event, context) {
         //  'createdAt': current Unix timestamp
 
         Item: {
-            UserId: event.requestContext.identity.cognitoIdentityId,
-            NoteId: uuidv1(),
+            userId: event.requestContext.identity.cognitoIdentityId,
+            noteId: uuidv1(),
             Content: data.content,
             Attachment: data.attachment,
             CreatedAt: Date.now()
