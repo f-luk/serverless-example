@@ -1,6 +1,6 @@
 import { v1 as uuidv1 } from 'uuid';
-import handler from './libs/handler';
-import dynamoDB from './libs/dynamoDB';
+import handler from '../libs/handler';
+import dynamoDB from '../libs/dynamoDB';
 
 export const main = handler(async (event, context) => {
     const data = JSON.parse(event.body);
@@ -20,9 +20,9 @@ export const main = handler(async (event, context) => {
         Item: {
             userId: event.requestContext.identity.cognitoIdentityId,
             noteId: uuidv1(),
-            Content: data.content,
-            Attachment: data.attachment,
-            CreatedAt: Date.now()
+            content: data.content,
+            attachment: data.attachment,
+            createdAt: Date.now()
         }
     };
 
