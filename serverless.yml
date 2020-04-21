@@ -23,6 +23,7 @@ provider:
   environment:
   #  SAMPLE_ENV_VAR: ${env:SAMPLE_ENV_VAR}
     tableName: notes
+    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
     
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
@@ -71,4 +72,31 @@ functions:
         method: get
         cors: true
         authotizer: aws_iam
-
+  update:
+    handler: functions/update.main
+    event:
+      - http:
+        path: notes/{id}
+        method: put
+        cors: true
+        authorizer: aws_iam
+  delete:
+    handler: functions/delete.main
+    event:
+      -http:
+        path: notes/{id}
+        method: delete
+        cors: true
+        authorizer: aws_iam
+  billing:
+    handler: functions/billing.main
+    event:
+      -http:
+        path: billing
+        method: post
+        cors: true
+        authorizer: aws_iam
+# Create our resources with separate CloudFormation templates
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
