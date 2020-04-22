@@ -12,7 +12,7 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   stage: prod
   region: us-east-1
   # To load environment variables externally
@@ -28,7 +28,7 @@ provider:
   # 'iamRoleStatements' defines the permission policy for the Lambda function.
   # In this case Lambda functions are granted with permissions to access DynamoDB.
   iamRoleStatements:
-    - Effect: allow
+    - Effect: Allow
       Action:
         - dynamodb:DescribeTable
         - dynamodb:Query
@@ -37,7 +37,8 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn.aws:dynamodb:us-east-1:038479334420:table/notes"
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+      
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
@@ -59,43 +60,47 @@ functions:
     handler: functions/get.main
     events:
       - http:
-        path: notes/{id}
-        method: get
-        cors: true
-        authorizer: aws_iam
+          path: notes/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
 
   list:
     handler: functions/list.main
     events:
       - http:
-        path: notes
-        method: get
-        cors: true
-        authotizer: aws_iam
+          path: notes
+          method: get
+          cors: true
+          authotizer: aws_iam
+  
   update:
     handler: functions/update.main
-    event:
+    events:
       - http:
-        path: notes/{id}
-        method: put
-        cors: true
-        authorizer: aws_iam
+          path: notes/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+
   delete:
     handler: functions/delete.main
-    event:
-      -http:
-        path: notes/{id}
-        method: delete
-        cors: true
-        authorizer: aws_iam
+    events:
+      - http:
+          path: notes/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
   billing:
     handler: functions/billing.main
-    event:
-      -http:
-        path: billing
-        method: post
-        cors: true
-        authorizer: aws_iam
+    events:
+      - http:
+          path: billing
+          method: post
+          cors: true
+          authorizer: aws_iam
+
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
